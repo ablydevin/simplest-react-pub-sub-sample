@@ -1,0 +1,25 @@
+import { Realtime }  from 'ably'
+import { AblyProvider, useChannel } from 'ably/react'
+
+function App() {
+  
+  const client = new Realtime({'authUrl':'[YOUR_ABLY_AUTH_URL]'});
+  
+  return (
+    <>
+      <AblyProvider client={client}>
+        <Messages />
+      </AblyProvider>
+    </>
+  )
+}
+
+function Messages() {
+
+  const { channel } = useChannel('outbound-messages');
+  return (
+    <button onClick={ ()=>{ channel.publish('test-message', 'This is a client test message') } }>Publish</button>
+  )
+}
+
+export default App

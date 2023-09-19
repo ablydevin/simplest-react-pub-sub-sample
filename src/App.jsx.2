@@ -1,0 +1,29 @@
+import { useState } from 'react'
+import { Realtime }  from 'ably'
+import { AblyProvider, useChannel } from 'ably/react'
+
+function App() {
+  
+  const client = new Realtime({'authUrl':'[YOUR_ABLY_AUTH_URL]'});
+  return (
+    <>
+      <AblyProvider client={client}>
+        <Messages />
+      </AblyProvider>
+    </>
+  )
+}
+
+function Messages() {
+
+  const [messages, updateMessages] = useState([])
+  useChannel('inbound-messages', (message) => {
+    updateMessages((prev) => [...prev, message]);
+  });
+
+  return (
+    <ul> { messages.map((m)=> { return <li>{m.data}</li> }) } </ul>
+  )
+}
+
+export default App
